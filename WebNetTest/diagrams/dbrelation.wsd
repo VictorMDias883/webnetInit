@@ -1,0 +1,44 @@
+@startuml dbrelationn
+class Products {
+    +String Name 
+    +String Code
+    +enum Category
+    +Double CostPrice
+    +Double SellPrice
+    +Integer StockQnt
+    +Integer MinStock
+
+    -Date CreatedAt
+    -Date UpdatedAt
+}
+class Clients {
+    +String Name
+    +String CellNumber
+    +String Adress 
+    +String CPForCNPJ
+    +String Payment
+
+    -Date CreatedAt
+    -Date UpdatedAt
+}
+Class Sells{
+    +Products Products
+    +Clients Costumer
+    +enum Payment
+
+    -Date CreatedAt
+
+}
+
+Class Logs{
+    +String LogsPath
+
+    -Date CreatedAt
+}
+
+Products --> Sells
+Clients --> Sells
+Sells -- Logs
+Clients -- Logs
+Products -- Logs
+@enduml

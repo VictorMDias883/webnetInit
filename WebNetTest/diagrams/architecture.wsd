@@ -1,0 +1,22 @@
+@startuml arctature
+left to right direction
+skinparam packageStyle rect
+actor costumer
+Rectangle Gateway{
+    (RateLimit)-->(Auth)
+    (Auth)-->(CORS)
+    (CORS)--> (Logs) 
+    (Logs)-- (Cache)
+    (CORS)-->(Roteamento)
+}
+costumer --> Gateway
+Rectangle Server{
+    (Controller)-->(Service)
+    (Service) <-- (Repository)
+    (Repository)<->(DataBase)
+    
+}
+Gateway --> Server
+Server --> Gateway
+Gateway --> costumer
+@enduml
