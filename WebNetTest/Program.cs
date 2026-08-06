@@ -4,10 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.Extensions.Caching.Distributed;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PoliticaPadrao",  policy =>
+    {
+        policy.WithOrigins("https://meufrontend.com",  "http://lovalhost:3000")
+        .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+    });
+});
 builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("ip", context =>
@@ -55,9 +62,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         )
     };
 });
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    
+});
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 var app = builder.Build();
+app.UseExceptionHandler("/error");
+app.UseRequestLogging();
+app.UseCors("PoliticaPadrao");
 app.UseRateLimiter();
 app.MapControllers().RequireRateLimiting("ip");
 app.UseAuthentication();
