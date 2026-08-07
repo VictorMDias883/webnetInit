@@ -11,7 +11,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("PoliticaPadrao",  policy =>
     {
-        policy.WithOrigins("https://meufrontend.com",  "http://lovalhost:3000")
+        policy.WithOrigins("https://meufrontend.com",  "http://localhost:3000")
         .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
     });
 });
@@ -77,4 +77,5 @@ app.UseRateLimiter();
 app.MapControllers().RequireRateLimiting("ip");
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapGet("/", ()=>"Hello world!");
 app.Run();
